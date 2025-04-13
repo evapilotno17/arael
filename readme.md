@@ -5,10 +5,13 @@
 
 ### Arael CLI — Available Commands:
 
-    help       : Show this help message.
-    start      : Start the keylogger.
-    status     : Check if Arael is running.
-    stop       : Stop the keylogger.
+    get_logs                : Rebuild text log files from database.
+    help                    : Show this help message.
+    start      (--verbose)  : Start the keylogger.
+    status                  : Check if Arael is running.
+    stop                    : Stop the keylogger.
+
+NOTE: to view your logs, you must run `python3 ctl.py get_logs`. this will generate your logs folder underneath the same directory :)
 
 
 
