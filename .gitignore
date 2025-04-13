@@ -1,0 +1,12 @@
+# venv
+venv/
+__pycache__/
+*.pyc
+
+# logs & db
+logs/
+*.db
+
+# misc
+.env
+*.sqlite
