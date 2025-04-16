@@ -7,6 +7,8 @@ from src.models import Keystroke
 from src.db import SessionLocal
 from collections import defaultdict
 from pathlib import Path
+from src.utils import Utils
+from io import StringIO
 
 def exposed(func):
     func._is_exposed = True
@@ -81,25 +83,29 @@ class CTLManager:
             print("Arael is not running")
 
     @exposed
-    def get_logs(self):
-        """Rebuild text log files from database."""
-        db = SessionLocal()
-        rows = db.query(Keystroke).order_by(Keystroke.timestamp.asc()).all()
-
-        grouped = defaultdict(list)
-        for row in rows:
-            date = row.timestamp.strftime("%Y-%m-%d")
-            time = row.timestamp.strftime("%H:%M:%S")
-            grouped[date].append(f"[{time}] {row.key}")
-
+    def regenerate_logs(self):
+        """Regenerate pretty-printed session logs into ./logs/."""
+        utils = Utils()
         log_dir = Path("logs")
         log_dir.mkdir(exist_ok=True)
 
-        for date, lines in grouped.items():
-            with open(log_dir / f"{date}.txt", "w") as f:
-                f.write("\n".join(lines))
+        days = utils.df['timestamp'].dt.strftime('%Y-%m-%d').unique()
 
-        print(f"regenerated logs for {len(grouped)} day(s)")
+        for day in days:
+            buf = StringIO()
+            sessions = utils.session_info(day)
+
+            for start, end, text in sessions:
+                if len(text.strip()) == 0:
+                    continue
+                speed = utils.get_typing_speed((start, end, text))
+                buf.write(f"[{start.strftime('%H:%M:%S')}] typing_speed: {speed:.2f} wpm\n")
+                buf.write(text + "\n" + '-' * 60 + "\n")
+
+            with open(log_dir / f"{day}.txt", "w") as f:
+                f.write(buf.getvalue())
+
+        print(f"regenerated logs for {len(days)} day(s)")
 
     @exposed
     def help(self):
