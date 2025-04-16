@@ -20,6 +20,5 @@ NOTE: to view your logs, you must run `python3 ctl.py regenerate_logs`. this wil
     > python3 ctl.py start
 
 ### todo
-- analytics ;) 
-- typing speed monitoring
-- maybe feed your keylogs into an llm?
+[] live typing speed graph
+[] analytics on top of the collected data
