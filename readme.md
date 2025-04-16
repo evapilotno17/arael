@@ -5,13 +5,13 @@
 
 ### Arael CLI — Available Commands:
 
-    get_logs                : Rebuild text log files from database.
+    regenerate_logs         : Rebuild text log files from database.
     help                    : Show this help message.
     start      (--verbose)  : Start the keylogger.
     status                  : Check if Arael is running.
     stop                    : Stop the keylogger.
 
-NOTE: to view your logs, you must run `python3 ctl.py get_logs`. this will generate your logs folder underneath the same directory :)
+NOTE: to view your logs, you must run `python3 ctl.py regenerate_logs`. this will generate your logs folder underneath the same directory :)
 
 
 
