@@ -10,6 +10,3 @@ logs/
 # misc
 .env
 *.sqlite
-
-# jups
-*.ipynb

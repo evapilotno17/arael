@@ -10,7 +10,7 @@ class Keystroke(Base):
     __tablename__ = 'keystrokes'
 
     id = Column(Integer, primary_key=True)
-    timestamp = Column(DateTime, default=datetime.now(india), nullable=False)
+    timestamp = Column(DateTime, default=datetime.now(india), index=True, nullable=False)
     key = Column(String, nullable=False)
     device = Column(String, default='laptop')
     session = Column(String, nullable=True)

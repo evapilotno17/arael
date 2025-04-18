@@ -33,29 +33,38 @@ class CTLManager:
 
     @exposed
     def start(self, verbose=False):
-        """Start the keylogger."""
+        """
+            Awken arael. --verbose : stream arael stdout/stderr
+        """
         if self.PID_FILE.exists():
             pid = self.get_pid()
             if pid and self.is_running(pid):
-                print(f"already running at PID - {pid}")
+                print(f"already running at PID {pid}")
                 return
-            else:
-                self.PID_FILE.unlink(missing_ok=True)
+            self.PID_FILE.unlink(missing_ok=True)
 
-        stdout = None if verbose else subprocess.DEVNULL
-        stderr = None if verbose else subprocess.DEVNULL
-
-        proc = subprocess.Popen(
-            [sys.executable, '-m', 'src.arael'],
-            stdout=stdout,
-            stderr=stderr,
-            # cwd=Path(__file__).resolve().parent
+        redir = None if verbose else subprocess.DEVNULL
+        kl_proc = subprocess.Popen(
+            [sys.executable, "-m", "src.arael"],
+            stdout=redir, stderr=redir,
         )
-
         with open(self.PID_FILE, "w") as f:
-            f.write(str(proc.pid))
+            f.write(str(kl_proc.pid))
 
-        print(f"arael has awakened and is watching you at PID: {proc.pid}")
+        print(f"arael has awakened and is watching you at (PID {kl_proc.pid})")
+
+    @exposed
+    def live(self):
+        """
+            monitor your typing speed live!!
+        """
+        pid = self.get_pid()
+        if not pid or not self.is_running(pid):
+            self.start()
+        live_proc = subprocess.Popen(
+            [sys.executable, "-m", "src.live_typing_speed"]
+        )
+        print(f"live typing speed monitor started (PID {live_proc.pid})")
 
     @exposed
     def stop(self):
@@ -84,7 +93,9 @@ class CTLManager:
 
     @exposed
     def regenerate_logs(self):
-        """Regenerate pretty-printed session logs into ./logs/."""
+        """
+            regenerate pretty-printed session logs into ./logs/.
+        """
         utils = Utils()
         log_dir = Path("logs")
         log_dir.mkdir(exist_ok=True)
